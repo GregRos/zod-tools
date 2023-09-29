@@ -1,8 +1,17 @@
 {
   "name": "zod-tools",
   "description": "Tools for transforming and inspecting zod schemas.",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "main": "dist/lib/index.js",
+  "exports": {
+    ".": {
+      "require": "./dist/lib/index.js",
+      "import": "./dist/lib/index.js",
+      "default": "./dist/lib/index.js",
+      "types": "./dist/lib/index.d.ts"
+    }
+  },
+  "typings": "dist/lib/index",
   "repository": "github:gregros/zod-tools",
   "scripts": {
     "build": "tsc -b tsconfig.all.json",
@@ -48,6 +57,5 @@
     "zod": "^3.22.2"
   },
   "dependencies": {
-
   }
 }

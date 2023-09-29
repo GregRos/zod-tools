@@ -16,3 +16,4 @@ export {
     zodInspect
 } from "./default-world";
 export { SchemaWorld, world } from "./world";
+export { ZodFirstPartySchemaTable } from "./zod-first-party-schema-table";
