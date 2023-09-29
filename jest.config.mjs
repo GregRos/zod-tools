@@ -4,7 +4,7 @@ const config = {
     preset: "ts-jest",
     testEnvironment: "node",
     rootDir:".",
-    testMatch: ["<rootDir>/src/test/**/*.ts"],
+    testMatch: ["<rootDir>/src/test/**/*.test.ts"],
     // The default test threshold is 5s. That's way too low.
     slowTestThreshold: 500,
 
