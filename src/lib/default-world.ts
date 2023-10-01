@@ -1,35 +1,15 @@
 import { ZodFirstPartySchemaTable } from "./zod-first-party-schema-table";
-import {
-    OutTableOf,
-    TransformationCases,
-    TransformationCore
-} from "./transformation-core";
-import { SchemaInspector } from "./schema-inspector";
+
+import { SchemaWorld } from "./world";
+import { NodeFromTable, ZodKindedAny } from "./types";
 import { ZodFirstPartyTypeKind } from "zod";
-import { ZodKindedAny, ZodKindOf } from "./types";
+import { SchemaInspector, SchemaNodeInspector } from "./schema-inspector";
 
-export type ZodTransformationCases<
-    OutTable extends OutTableOf<ZodFirstPartySchemaTable>
-> = TransformationCases<ZodFirstPartySchemaTable, OutTable>;
+const w = new SchemaWorld<ZodFirstPartySchemaTable>();
 
-export type ZodTransformation<
-    OutTable extends OutTableOf<ZodFirstPartySchemaTable>
-> = TransformationCore<ZodFirstPartySchemaTable, OutTable>;
+export const zodMatch = w.match.bind(w);
+export const zodInspect = w.inspect.bind(w);
+export const zodMatcher = w.matcher.bind(w);
 
-export type ZodInspector<
-    Key extends ZodFirstPartyTypeKind[keyof ZodFirstPartyTypeKind] & string
-> = SchemaInspector<ZodFirstPartySchemaTable, Key>;
-
-export function zodTransformation<
-    Cases extends OutTableOf<ZodFirstPartySchemaTable> & {
-        else: unknown;
-    }
->(cases: ZodTransformationCases<Cases>) {
-    return new TransformationCore<ZodFirstPartySchemaTable, Cases>(cases);
-}
-
-export function zodInspect<Z extends ZodKindedAny<ZodFirstPartyTypeKind>>(
-    node: Z
-): ZodInspector<ZodKindOf<Z>> {
-    return new SchemaInspector(node as any);
-}
+export type ZodInspector<Kind extends keyof ZodFirstPartySchemaTable & string> =
+    SchemaInspector<ZodFirstPartySchemaTable, Kind>;

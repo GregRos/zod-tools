@@ -1,9 +1,9 @@
-import { zodTransformation } from "@lib";
+import { zodMatch, zodMatcher } from "@lib";
 import { z } from "zod";
 import { expectT } from "../helpers/anti-assert";
 
 test("Only ZodString and else", () => {
-    const v = zodTransformation<{
+    const matcher = zodMatcher().cases<{
         ZodString: "hello";
         else: false;
     }>({
@@ -14,13 +14,18 @@ test("Only ZodString and else", () => {
             return false;
         }
     });
-    expect(v.run(z.string()) satisfies "hello").toBe("hello");
+    expect(matcher).toBeInstanceOf(Function);
+    expect(matcher(z.string())).toBe("hello");
+    expectT(matcher(z.number())).is<"hello">(false).is<boolean>(true);
     // Takes else branch
-    expect(v.run(z.number()) satisfies "hello" | false).toBe(false);
+    expect(matcher(z.number())).toBe(false);
+    expectT(matcher(z.number())).is<"hello">(false).is<boolean>(true);
 });
 
 test("With case-based recursion", () => {
-    const v = zodTransformation<{
+    const dummy = z.tuple([z.string(), z.tuple([z.number(), z.string()])]);
+
+    const v = zodMatch(dummy).cases<{
         ZodTuple: any[];
         ZodString: "hello";
         ZodNumber: 42;
@@ -43,8 +48,5 @@ test("With case-based recursion", () => {
         }
     });
 
-    const dummy = z.tuple([z.string(), z.tuple([z.number(), z.string()])]);
-
-    const result = v.run(dummy);
-    expect(result).toEqual(["hello", [42, "hello"]]);
+    expect(v).toEqual(["hello", [42, "hello"]]);
 });

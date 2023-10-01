@@ -1,14 +1,14 @@
-import { ZodInspector, zodTransformation } from "@lib";
+import { ZodInspector, zodMatch } from "@lib";
 import { z, ZodFirstPartyTypeKind } from "zod";
 import { expectT } from "../helpers/anti-assert";
 
 test("must have else", () => {
     // @ts-expect-error Must have else clause
-    expect(() => zodTransformation({})).toThrow();
+    expect(() => zodMatch().cases({})).toThrow();
 });
 
 test("else-only visitor", () => {
-    const v = zodTransformation<{
+    const result = zodMatch(z.string()).cases<{
         else: "hello";
     }>({
         else(node, ctx) {
@@ -20,28 +20,27 @@ test("else-only visitor", () => {
             return "hello";
         }
     });
-    const result = v.run(z.string());
     expectT(result).is<"hello">(true).is<number>(false);
-    expect(v.run(z.string())).toBe("hello");
-    expect(v.run(z.number())).toBe("hello");
+    expect(result).toBe("hello");
 });
 
 test("else-only visitor can throw", () => {
-    const v = zodTransformation<{
-        else: string;
-    }>({
-        else() {
-            throw new Error("hello");
-        }
-    });
-    expect(() => v.run(z.string())).toThrow("hello");
+    expect(() =>
+        zodMatch(z.string()).cases<{
+            else: string;
+        }>({
+            else() {
+                throw new Error("hello");
+            }
+        })
+    ).toThrow("hello");
 });
 
 test("else-only recursion", () => {
     const dummy = z.string().optional();
 
-    const v = zodTransformation<{
-        else: any;
+    const v = zodMatch(dummy).cases<{
+        else: "hello";
     }>({
         else(node, ctx) {
             if (node.is("ZodOptional")) {
@@ -59,14 +58,15 @@ test("else-only recursion", () => {
                     .is<"ZodOptional">(false);
                 return "hello";
             }
+            throw new Error("Should not happen");
         }
     });
 
-    expect(v.run(dummy)).toEqual("hello");
+    expect(v).toEqual("hello");
 });
 
 test("type error for useless key", () => {
-    zodTransformation<{
+    zodMatch(z.string()).cases<{
         else: any;
     }>({
         else() {

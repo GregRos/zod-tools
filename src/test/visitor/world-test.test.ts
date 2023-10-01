@@ -7,7 +7,7 @@ const w = new SchemaWorld<SchemaTableWithMagicBox>();
 
 test("first party - else ", () => {
     const s = z.string().optional();
-    const transform = w.transformation<{
+    const result = w.match(s).cases<{
         else: number;
     }>({
         else(node, ctx) {
@@ -25,14 +25,13 @@ test("first party - else ", () => {
             return 1;
         }
     });
-    const result = transform.run(s);
     expect(result).toBe(2);
     expectT(result).is<number>(true).is<string>(false);
 });
 
 test("test - first party, cases", () => {
     const s = z.string().optional();
-    const transform = w.transformation<{
+    const result = w.match(s).cases<{
         ZodOptional: number;
         ZodString: number;
         else: number;
@@ -49,7 +48,6 @@ test("test - first party, cases", () => {
             fail("should not else");
         }
     });
-    const result = transform.run(s);
     expect(result).toBe(2);
     expectT(result).is<number>(true).is<string>(false);
 });

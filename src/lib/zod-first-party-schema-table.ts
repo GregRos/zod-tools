@@ -41,12 +41,13 @@ import {
     ZodVoid
 } from "zod";
 import { SchemaTableOf, ZodKindedAny } from "./types";
-// We do it like this because it performs so much better
-// than something like:
-// ```
-// export type ZodFirstPartySchema = ZodEffects | ZodPipeline | ...
-// ```
-// And then manipulating the result with `Expect`.
+
+/**
+ * This is a table of all the first party schemas. It makes various types
+ * aware of all schemas using their preferred types.
+ *
+ * You will never need to make instances of this class.
+ */
 export abstract class ZodFirstPartySchemaTable
     implements SchemaTableOf<ZodFirstPartyTypeKind>
 {

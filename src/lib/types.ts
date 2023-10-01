@@ -39,3 +39,6 @@ export type ZodKindOf<ZSchema extends ZodKindedAny> =
 export type SchemaTableOf<Keys extends string = string> = {
     [K in Keys]: ZodKindedAny<K>;
 };
+
+export type NodeFromTable<SchemaTable extends SchemaTableOf> =
+    SchemaTable[keyof SchemaTable & string];
