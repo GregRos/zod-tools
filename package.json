@@ -1,7 +1,7 @@
 {
   "name": "zod-tools",
-  "description": "Tools for transforming and inspecting zod schemas.",
-  "version": "0.1.2",
+  "description": "Tools for working with Zod schemas.",
+  "version": "0.2.0",
   "main": "dist/lib/index.js",
   "exports": {
     ".": {
@@ -25,9 +25,9 @@
   "keywords": [
     "zod",
     "schema",
-    "inspect",
-    "type-check",
+    "traverse",
     "transform",
+    "match",
     "visitor",
     "utility"
   ],
