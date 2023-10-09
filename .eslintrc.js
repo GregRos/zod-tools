@@ -5,9 +5,11 @@ module.exports = {
     parserOptions: {
         project: [
             path.join(__dirname, "src", "lib", "tsconfig.json"),
-            
+
             path.join(__dirname, "src", "test", "tsconfig.json")
-            
         ]
+    },
+    rules: {
+        "no-invalid-this": "off"
     }
 };

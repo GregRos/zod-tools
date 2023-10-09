@@ -49,58 +49,45 @@ import { SchemaTableOf, ZodKindedAny } from "./types";
  * You will never need to make instances of this class.
  */
 export abstract class ZodFirstPartySchemaTable
-    implements SchemaTableOf<ZodFirstPartyTypeKind>
+    implements Record<ZodFirstPartyTypeKind, ZodKindedAny>
 {
-    [key: string]: ZodKindedAny;
-
-    [ZodFirstPartyTypeKind.ZodEffects]!: ZodEffects<ZodKindedAny>;
-    [ZodFirstPartyTypeKind.ZodPipeline]!: ZodPipeline<
-        ZodKindedAny,
-        ZodKindedAny
-    >;
-    [ZodFirstPartyTypeKind.ZodNativeEnum]!: ZodNativeEnum<EnumLike>;
-    [ZodFirstPartyTypeKind.ZodEnum]!: ZodEnum<[string, ...string[]]>;
-    [ZodFirstPartyTypeKind.ZodDate]!: ZodDate;
-    [ZodFirstPartyTypeKind.ZodPromise]!: ZodPromise<ZodKindedAny>;
-    [ZodFirstPartyTypeKind.ZodReadonly]!: ZodReadonly<ZodKindedAny>;
-    [ZodFirstPartyTypeKind.ZodMap]!: ZodMap;
-    [ZodFirstPartyTypeKind.ZodSet]!: ZodSet;
-    [ZodFirstPartyTypeKind.ZodRecord]!: ZodRecord;
-    [ZodFirstPartyTypeKind.ZodLiteral]!: ZodLiteral<any>;
-    [ZodFirstPartyTypeKind.ZodNull]!: ZodNull;
-    [ZodFirstPartyTypeKind.ZodNaN]!: ZodNaN;
-    [ZodFirstPartyTypeKind.ZodUndefined]!: ZodUndefined;
-    [ZodFirstPartyTypeKind.ZodBoolean]!: ZodBoolean;
-    [ZodFirstPartyTypeKind.ZodString]!: ZodString;
-    [ZodFirstPartyTypeKind.ZodNumber]!: ZodNumber;
-    [ZodFirstPartyTypeKind.ZodBigInt]!: ZodBigInt;
-    [ZodFirstPartyTypeKind.ZodAny]!: ZodAny;
-    [ZodFirstPartyTypeKind.ZodUnknown]!: ZodUnknown;
-    [ZodFirstPartyTypeKind.ZodNever]!: ZodNever;
-    [ZodFirstPartyTypeKind.ZodVoid]!: ZodVoid;
-    [ZodFirstPartyTypeKind.ZodSymbol]!: ZodSymbol;
-    [ZodFirstPartyTypeKind.ZodLazy]!: ZodLazy<ZodKindedAny>;
-    [ZodFirstPartyTypeKind.ZodBranded]!: ZodBranded<ZodKindedAny, any>;
-    [ZodFirstPartyTypeKind.ZodCatch]!: ZodCatch<ZodKindedAny>;
-    [ZodFirstPartyTypeKind.ZodDefault]!: ZodDefault<ZodKindedAny>;
-    [ZodFirstPartyTypeKind.ZodOptional]!: ZodOptional<ZodKindedAny>;
-    [ZodFirstPartyTypeKind.ZodUnion]!: ZodUnion<
-        [ZodKindedAny, ...ZodKindedAny[]]
-    >;
-    [ZodFirstPartyTypeKind.ZodDiscriminatedUnion]!: ZodDiscriminatedUnion<
+    ZodEffects!: ZodEffects<ZodKindedAny>;
+    ZodPipeline!: ZodPipeline<ZodKindedAny, ZodKindedAny>;
+    ZodNativeEnum!: ZodNativeEnum<EnumLike>;
+    ZodEnum!: ZodEnum<[string, ...string[]]>;
+    ZodDate!: ZodDate;
+    ZodPromise!: ZodPromise<ZodKindedAny>;
+    ZodReadonly!: ZodReadonly<ZodKindedAny>;
+    ZodMap!: ZodMap;
+    ZodSet!: ZodSet;
+    ZodRecord!: ZodRecord;
+    ZodLiteral!: ZodLiteral<any>;
+    ZodNull!: ZodNull;
+    ZodNaN!: ZodNaN;
+    ZodUndefined!: ZodUndefined;
+    ZodBoolean!: ZodBoolean;
+    ZodString!: ZodString;
+    ZodNumber!: ZodNumber;
+    ZodBigInt!: ZodBigInt;
+    ZodAny!: ZodAny;
+    ZodUnknown!: ZodUnknown;
+    ZodNever!: ZodNever;
+    ZodVoid!: ZodVoid;
+    ZodSymbol!: ZodSymbol;
+    ZodLazy!: ZodLazy<ZodKindedAny>;
+    ZodBranded!: ZodBranded<ZodKindedAny, any>;
+    ZodCatch!: ZodCatch<ZodKindedAny>;
+    ZodDefault!: ZodDefault<ZodKindedAny>;
+    ZodOptional!: ZodOptional<ZodKindedAny>;
+    ZodUnion!: ZodUnion<[ZodKindedAny, ...ZodKindedAny[]]>;
+    ZodDiscriminatedUnion!: ZodDiscriminatedUnion<
         string,
         ZodDiscriminatedUnionOption<string>[]
     >;
-    [ZodFirstPartyTypeKind.ZodNullable]!: ZodNullable<ZodKindedAny>;
-    [ZodFirstPartyTypeKind.ZodFunction]!: ZodFunction<
-        AnyZodTuple,
-        ZodKindedAny
-    >;
-    [ZodFirstPartyTypeKind.ZodObject]!: ZodObject<ZodRawShape>;
-    [ZodFirstPartyTypeKind.ZodTuple]!: AnyZodTuple;
-    [ZodFirstPartyTypeKind.ZodIntersection]!: ZodIntersection<
-        ZodKindedAny,
-        ZodKindedAny
-    >;
-    [ZodFirstPartyTypeKind.ZodArray]!: ZodArray<ZodKindedAny>;
+    ZodNullable!: ZodNullable<ZodKindedAny>;
+    ZodFunction!: ZodFunction<AnyZodTuple, ZodKindedAny>;
+    ZodObject!: ZodObject<ZodRawShape>;
+    ZodTuple!: AnyZodTuple;
+    ZodIntersection!: ZodIntersection<ZodKindedAny, ZodKindedAny>;
+    ZodArray!: ZodArray<ZodKindedAny>;
 }

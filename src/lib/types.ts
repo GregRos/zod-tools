@@ -36,9 +36,9 @@ export type ZodKindOf<ZSchema extends ZodKindedAny> =
  * This type is only used for type checking. You will never need to
  * provide a value of this type.
  */
-export type SchemaTableOf<Keys extends string = string> = {
-    [K in Keys]: ZodKindedAny<K>;
+export type SchemaTableOf<SchemaTable> = {
+    [K in keyof SchemaTable]: ZodKindedAny<K & string>;
 };
 
-export type NodeFromTable<SchemaTable extends SchemaTableOf> =
+export type NodeFromTable<SchemaTable extends SchemaTableOf<SchemaTable>> =
     SchemaTable[keyof SchemaTable & string];

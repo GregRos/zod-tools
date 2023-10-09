@@ -1,6 +1,6 @@
 import { SchemaInspector, zodInspect, ZodInspector } from "@lib";
 import { z, ZodFirstPartyTypeKind } from "zod";
-import { SchemaNodeInspector } from "@lib/schema-inspector";
+import { SchemaNodeInspector } from "@lib";
 
 test("works for ZodString", () => {
     const inspected = zodInspect(

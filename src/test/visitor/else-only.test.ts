@@ -1,6 +1,8 @@
-import { ZodInspector, zodMatch } from "@lib";
+import { ZodInspector, zodMatch, zodMatcher } from "@lib";
 import { z, ZodFirstPartyTypeKind } from "zod";
 import { expectT } from "../helpers/anti-assert";
+import { AnyZodInspector } from "@lib/default-world";
+import { Stack } from "immutable";
 
 test("must have else", () => {
     // @ts-expect-error Must have else clause
@@ -11,12 +13,12 @@ test("else-only visitor", () => {
     const result = zodMatch(z.string()).cases<{
         else: "hello";
     }>({
-        else(node, ctx) {
-            expect(ctx.parents).toEqual([]);
+        else(node) {
+            expect(this.parents).toEqual(Stack());
             expectT(node)
-                .is<ZodInspector<string>>(true)
+                .is<AnyZodInspector>(true)
                 // Weird but expected
-                .is<ZodInspector<ZodFirstPartyTypeKind.ZodString>>(false);
+                .is<ZodInspector<"ZodString">>(false);
             return "hello";
         }
     });
@@ -42,17 +44,17 @@ test("else-only recursion", () => {
     const v = zodMatch(dummy).cases<{
         else: "hello";
     }>({
-        else(node, ctx) {
+        else(node) {
             if (node.is("ZodOptional")) {
-                expect(ctx.parents).toEqual([]);
+                expect(this.parents).toEqual(Stack());
                 expectT(node.kind)
                     .is<"ZodOptional">(true)
                     .is<"ZodString">(false);
 
-                return ctx.recurse(node._def.innerType);
+                return this.recurse(node._def.innerType);
             }
             if (node.is("ZodString")) {
-                expect(ctx.parents.map(x => x._node)).toEqual([dummy]);
+                expect(this.parents.map(x => x._node)).toEqual(Stack.of(dummy));
                 expectT(node.kind)
                     .is<"ZodString">(true)
                     .is<"ZodOptional">(false);

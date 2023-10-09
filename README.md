@@ -1,6 +1,8 @@
 # zod-tools
 
-Tools for traversing Zod schema trees while keeping some type information intact. Supports custom nodes with minimal configuration.
+The main tool here is the Zod schema matcher. There is also the inspector, but it’s mainly used as a component of the matcher.
+
+The matcher emulates pattern matching, something found in other languages 
 
 ## Inspector
 
