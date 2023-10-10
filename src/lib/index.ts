@@ -3,7 +3,7 @@ export {
     ZodKindOf,
     ZodDefOf,
     ZodKindedTypeDef,
-    SchemaTableOf
+    InTableOf
 } from "./types";
 
 export { SchemaInspector, SchemaNodeInspector } from "./schema-inspector";
@@ -21,5 +21,5 @@ export {
     ZodInspector
 } from "./default-world";
 export { SchemaWorld, world } from "./world";
-export { ZodFirstPartySchemaTable } from "./zod-first-party-schema-table";
+export { ZodFirstPartyNodesTable } from "./zod-first-party-nodes-table";
 export { BaseContextDef } from "./base-context";

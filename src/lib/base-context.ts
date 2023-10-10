@@ -1,34 +1,32 @@
 import { ZodTypeAny } from "zod";
-import { SchemaTableOf, ZodKindedAny, ZodKindOf } from "./types";
+import { KindedAny, InTableOf, ZodKindedAny, ZodKindOf } from "./types";
 import { SchemaInspector, SchemaNodeInspector } from "./schema-inspector";
 import { Stack } from "immutable";
 
 export type Recurse<
-    SchemaTable extends SchemaTableOf<SchemaTable>,
-    OutTable extends OutTableOf<SchemaTable>,
+    InTable extends InTableOf<InTable>,
+    OutTable extends OutTableOf<InTable>,
     Ctx
-> = <Node extends ZodKindedAny>(
+> = <Node extends KindedAny>(
     this: Ctx,
-    node: SchemaNodeInspector<SchemaTable, Node>
+    node: SchemaNodeInspector<InTable, Node>
 ) => getOutputTypeOrDefault<Node, OutTable>;
 
-export interface BaseContextDef<
-    SchemaTable extends SchemaTableOf<SchemaTable>
-> {
-    readonly path: Stack<SchemaInspector<SchemaTable, any>>;
+export interface BaseContextDef<InTable extends InTableOf<InTable>> {
+    readonly path: Stack<SchemaInspector<InTable, any>>;
 }
 
 export abstract class BaseContext<
-    SchemaTable extends SchemaTableOf<SchemaTable>,
-    OutTable extends OutTableOf<SchemaTable>,
+    InTable extends InTableOf<InTable>,
+    OutTable extends OutTableOf<InTable>,
     Ctx,
-    Def extends BaseContextDef<SchemaTable> = any
+    Def extends BaseContextDef<InTable> = any
 > {
-    __SchemaTable__!: SchemaTable;
+    __SchemaTable__!: InTable;
     __OutTable__!: OutTable;
 
     constructor(
-        readonly _recurse: Recurse<SchemaTable, OutTable, Ctx>,
+        readonly _recurse: Recurse<InTable, OutTable, Ctx>,
         readonly _def: Def
     ) {}
 
@@ -38,7 +36,7 @@ export abstract class BaseContext<
         return this._def.path.pop();
     }
 
-    recurse<ZodSome extends ZodKindedAny>(
+    recurse<ZodSome extends KindedAny>(
         node: ZodSome
     ): getOutputTypeOrDefault<ZodSome, OutTable> {
         const inspected = new SchemaNodeInspector(node as any);
@@ -59,18 +57,18 @@ export type MatcherCases<Ctx extends BaseContext<any, any, Ctx>> = {
 } & {
     else: (
         this: Ctx,
-        node: SchemaNodeInspector<Ctx["__SchemaTable__"], ZodKindedAny>
+        node: SchemaNodeInspector<Ctx["__SchemaTable__"], KindedAny>
     ) => Ctx["__OutTable__"]["else"];
 };
 
-export type OutTableOf<SchemaTable> = {
-    [K in keyof SchemaTable]?: unknown;
+export type OutTableOf<OuTable> = {
+    [K in keyof OuTable]?: unknown;
 } & {
     else: unknown;
 };
 
 export type getOutputTypeOrDefault<
-    ZSChema extends ZodTypeAny,
+    ZSChema extends KindedAny,
     OutTable extends OutTableOf<OutTable>
 > = ZodKindOf<ZSChema> extends keyof OutTable
     ? OutTable[ZodKindOf<ZSChema>]

@@ -1,9 +1,15 @@
-import { SchemaTableOf, ZodDefOf, ZodKindedAny, ZodKindOf } from "./types";
+import {
+    KindedAny,
+    InTableOf,
+    ZodDefOf,
+    ZodKindedAny,
+    ZodKindOf
+} from "./types";
 
 export type SchemaInspector<
-    SchemaTable extends SchemaTableOf<SchemaTable>,
-    Kind extends keyof SchemaTable
-> = SchemaNodeInspector<SchemaTable, SchemaTable[Kind]>;
+    InTable extends InTableOf<InTable>,
+    Kind extends keyof InTable
+> = SchemaNodeInspector<InTable, InTable[Kind]>;
 
 /**
  * Use this to inspect a schema node. You can use the `is` method to check if the
@@ -11,8 +17,8 @@ export type SchemaInspector<
  * name.
  */
 export class SchemaNodeInspector<
-    SchemaTable extends SchemaTableOf<SchemaTable>,
-    Node extends ZodKindedAny
+    InTable extends InTableOf<InTable>,
+    Node extends KindedAny
 > {
     constructor(readonly _node: Node) {}
 
@@ -27,13 +33,9 @@ export class SchemaNodeInspector<
      * Check if the schema node has a specific Kind. This is a type guard.
      * @param kind The kind to check for.
      */
-    is<const SubKind extends keyof SchemaTable>(
+    is<const SubKind extends keyof InTable>(
         kind: SubKind
-    ): this is string extends ZodKindOf<Node>
-        ? SchemaNodeInspector<SchemaTable, SchemaTable[SubKind]>
-        : ZodKindOf<Node> extends SubKind
-        ? SchemaNodeInspector<SchemaTable, SchemaTable[SubKind]>
-        : never {
+    ): this is SchemaNodeInspector<InTable, InTable[SubKind]> {
         return this._def.typeName === kind;
     }
 

@@ -18,7 +18,7 @@ test("else-only visitor", () => {
             expectT(node)
                 .is<AnyZodInspector>(true)
                 // Weird but expected
-                .is<ZodInspector<"ZodString">>(false);
+                .is<ZodInspector<ZodFirstPartyTypeKind.ZodString>>(false);
             return "hello";
         }
     });
@@ -45,7 +45,7 @@ test("else-only recursion", () => {
         else: "hello";
     }>({
         else(node) {
-            if (node.is("ZodOptional")) {
+            if (node.is(ZodFirstPartyTypeKind.ZodOptional)) {
                 expect(this.parents).toEqual(Stack());
                 expectT(node.kind)
                     .is<"ZodOptional">(true)
@@ -53,7 +53,7 @@ test("else-only recursion", () => {
 
                 return this.recurse(node._def.innerType);
             }
-            if (node.is("ZodString")) {
+            if (node.is(ZodFirstPartyTypeKind.ZodString)) {
                 expect(this.parents.map(x => x._node)).toEqual(Stack.of(dummy));
                 expectT(node.kind)
                     .is<"ZodString">(true)

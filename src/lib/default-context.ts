@@ -1,4 +1,4 @@
-import { SchemaTableOf } from "./types";
+import { InTableOf } from "./types";
 import { Stack } from "immutable";
 import {
     BaseContext,
@@ -8,28 +8,22 @@ import {
 } from "./base-context";
 
 export class MatcherContext<
-    SchemaTable extends SchemaTableOf<SchemaTable>,
-    OutTable extends OutTableOf<SchemaTable>
+    InTable extends InTableOf<InTable>,
+    OutTable extends OutTableOf<InTable>
 > extends BaseContext<
-    SchemaTable,
+    InTable,
     OutTable,
-    MatcherContext<SchemaTable, OutTable>,
-    BaseContextDef<SchemaTable>
+    MatcherContext<InTable, OutTable>,
+    BaseContextDef<InTable>
 > {
-    protected _with(D: any): MatcherContext<SchemaTable, OutTable> {
+    protected _with(D: any): MatcherContext<InTable, OutTable> {
         return new MatcherContext(this._recurse, D);
     }
 
     static create<
-        SchemaTable extends SchemaTableOf<SchemaTable>,
-        OutTable extends OutTableOf<SchemaTable>
-    >(
-        recurse: Recurse<
-            SchemaTable,
-            OutTable,
-            MatcherContext<SchemaTable, OutTable>
-        >
-    ) {
+        InTable extends InTableOf<InTable>,
+        OutTable extends OutTableOf<InTable>
+    >(recurse: Recurse<InTable, OutTable, MatcherContext<InTable, OutTable>>) {
         return new MatcherContext(recurse, {
             path: Stack()
         });

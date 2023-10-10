@@ -1,6 +1,6 @@
 import { SchemaTableWithMagicBox } from "../helpers/magic-box";
 import { SchemaWorld, world } from "@lib";
-import { z, ZodOptionalDef, ZodStringDef } from "zod";
+import { z, ZodFirstPartyTypeKind, ZodOptionalDef, ZodStringDef } from "zod";
 import { expectT } from "../helpers/anti-assert";
 
 const w = world<SchemaTableWithMagicBox>();
@@ -11,12 +11,12 @@ test("first party - else ", () => {
         else: number;
     }>({
         else(node) {
-            if (node.is("ZodOptional")) {
+            if (node.is(ZodFirstPartyTypeKind.ZodOptional)) {
                 expectT(node._def)
                     .is<ZodOptionalDef>(true)
                     .is<ZodStringDef>(false);
                 return 1 + this.recurse(node._def.innerType);
-            } else if (node.is("ZodString")) {
+            } else if (node.is(ZodFirstPartyTypeKind.ZodString)) {
                 expectT(node._def)
                     .is<ZodOptionalDef>(false)
                     .is<ZodStringDef>(true);

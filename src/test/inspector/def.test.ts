@@ -1,5 +1,11 @@
 import { zodInspect } from "@lib";
-import { z, ZodArrayDef, ZodOptionalDef, ZodStringDef } from "zod";
+import {
+    z,
+    ZodArrayDef,
+    ZodFirstPartyTypeKind,
+    ZodOptionalDef,
+    ZodStringDef
+} from "zod";
 import { expectT } from "../helpers/anti-assert";
 
 test("get def of ZodString", () => {
@@ -22,7 +28,7 @@ test("get def of ZodNumber", () => {
 
 test("expore def", () => {
     const inspected = zodInspect(z.number().optional().array().optional());
-    if (inspected.is("ZodOptional")) {
+    if (inspected.is(ZodFirstPartyTypeKind.ZodOptional)) {
         expectT(inspected._def)
             .is<ZodStringDef>(false)
             .is<ZodOptionalDef>(true);
@@ -31,7 +37,7 @@ test("expore def", () => {
         fail("Expected ZodOptional");
     }
     const inspected2 = zodInspect(inspected._def.innerType);
-    if (inspected2.is("ZodArray")) {
+    if (inspected2.is(ZodFirstPartyTypeKind.ZodArray)) {
         expectT(inspected2._def)
             .is<ZodStringDef>(false)
             .is<ZodOptionalDef>(false)
@@ -42,7 +48,7 @@ test("expore def", () => {
     }
 
     const inspected3 = zodInspect(inspected2._def.type);
-    if (inspected3.is("ZodOptional")) {
+    if (inspected3.is(ZodFirstPartyTypeKind.ZodOptional)) {
         expectT(inspected3._def)
             .is<ZodStringDef>(false)
             .is<ZodOptionalDef>(true)

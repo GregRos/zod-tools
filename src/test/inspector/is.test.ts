@@ -4,10 +4,10 @@ import { expectT } from "../helpers/anti-assert";
 
 test("is - runtime (1)", () => {
     const inspected = zodInspect(z.string());
-    if (inspected.is("ZodNumber")) {
+    if (inspected.is(ZodFirstPartyTypeKind.ZodNumber)) {
         expectT(inspected).is<never>(true).si<true>(false);
         fail("serror");
-    } else if (inspected.is("ZodString")) {
+    } else if (inspected.is(ZodFirstPartyTypeKind.ZodString)) {
         expectT(inspected)
             .is<ZodInspector<ZodFirstPartyTypeKind.ZodString>>(true)
             .is<ZodInspector<ZodFirstPartyTypeKind.ZodNumber>>(false);
@@ -26,10 +26,10 @@ test("is - runtime (1)", () => {
 
 test("is - runtime (2)", () => {
     const inspected = zodInspect(z.number());
-    if (inspected.is("ZodString")) {
+    if (inspected.is(ZodFirstPartyTypeKind.ZodString)) {
         expectT(inspected).is<never>(true).si<true>(false);
         fail("error");
-    } else if (inspected.is("ZodNumber")) {
+    } else if (inspected.is(ZodFirstPartyTypeKind.ZodNumber)) {
         expectT(inspected)
             .is<ZodInspector<ZodFirstPartyTypeKind.ZodString>>(false)
             .is<ZodInspector<ZodFirstPartyTypeKind.ZodNumber>>(true);
@@ -49,7 +49,7 @@ test("is - runtime (2)", () => {
 
 test("narrows (1)", () => {
     const inspected = zodInspect(z.string());
-    if (inspected.is("ZodString")) {
+    if (inspected.is(ZodFirstPartyTypeKind.ZodString)) {
         expectT(inspected)
             .is<ZodInspector<ZodFirstPartyTypeKind.ZodString>>(true)
             .is<ZodInspector<ZodFirstPartyTypeKind.ZodNumber>>(false);

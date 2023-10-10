@@ -1,4 +1,4 @@
-import { SchemaTableOf, ZodKindedAny, ZodKindOf } from "./types";
+import { KindedAny, InTableOf, ZodKindedAny, ZodKindOf } from "./types";
 import { SchemaInspector, SchemaNodeInspector } from "./schema-inspector";
 import {
     getOutputTypeOrDefault,
@@ -11,58 +11,25 @@ import { Stack } from "immutable";
 import { MatcherContext } from "./default-context";
 
 /**
- * Used in the recursive matcher. Specify the `OutTable` and the match cases,
- * then immediately apply the matcher.
- */
-export interface UsingContext<Ctx extends BaseContext<any, any, Ctx>> {
-    context(contextCtor: MatcherCases<Ctx>): Ctx;
-}
-
-export interface SetCases<Ctx extends BaseContext<any, any, Ctx>> {
-    cases(contextCtor: MatcherCases<Ctx>): Ctx;
-}
-
-/**
- * Used by the recursive matcher. Specify the `OutTable` and the match cases,
- * getting a reusable matching function in return.
- */
-export interface BuildingMatcher<Ctx extends BaseContext<any, any, Ctx>> {
-    context(createEmpty: (recurse: Ctx["_recurse"]) => Ctx): UsingContext<Ctx>;
-}
-
-export interface TableMatcher<
-    SchemaTable extends SchemaTableOf<SchemaTable>,
-    OutTable extends OutTableOf<SchemaTable>,
-    State extends object
-> {
-    run<ZodSome extends ZodKindedAny>(
-        start: ZodSome,
-        ctx: State
-    ): getOutputTypeOrDefault<ZodSome, OutTable>;
-}
-
-/**
  * Use this if you have custom schema nodes. You need to explicitly specify the
  * `SchemaTable` so the world knows which schemas are included. Then you can create
  * matchers and inspectors that work with your custom schemas.
  */
-export class SchemaWorld<SchemaTable extends SchemaTableOf<SchemaTable>> {
+export class SchemaWorld<InTable extends InTableOf<InTable>> {
     /**
      * Create a schema inspector for a given schema node.
      * @param node The schema node to inspect.
      */
-    inspect<Z extends ZodKindedAny>(
-        node: Z
-    ): SchemaNodeInspector<SchemaTable, Z> {
+    inspect<Z extends KindedAny>(node: Z): SchemaNodeInspector<InTable, Z> {
         return new SchemaNodeInspector(node as any);
     }
 
-    matcher<Ctx extends BaseContext<SchemaTable, any, any>>(
-        createEmpty: (recurse: Recurse<SchemaTable, any, any>) => Ctx
+    matcher<Ctx extends BaseContext<InTable, any, any>>(
+        createEmpty: (recurse: Recurse<InTable, any, any>) => Ctx
     ) {
         return {
             cases(cases: MatcherCases<Ctx>): Ctx {
-                const recurse: Recurse<SchemaTable, Ctx["__OutTable__"], Ctx> =
+                const recurse: Recurse<InTable, Ctx["__OutTable__"], Ctx> =
                     function (this: Ctx, node) {
                         if (node.kind in cases) {
                             return (cases as any)[node.kind].call(this, node);
@@ -75,16 +42,16 @@ export class SchemaWorld<SchemaTable extends SchemaTableOf<SchemaTable>> {
         };
     }
 
-    match<MatchTarget extends ZodKindedAny>(target: MatchTarget) {
+    match<MatchTarget extends KindedAny>(target: MatchTarget) {
         const world = this;
         return {
-            cases<OutTable extends OutTableOf<SchemaTable>>(
-                cases: MatcherCases<MatcherContext<SchemaTable, OutTable>>
+            cases<OutTable extends OutTableOf<InTable>>(
+                cases: MatcherCases<MatcherContext<InTable, OutTable>>
             ) {
                 return world
                     .matcher(
                         recurse =>
-                            new MatcherContext<SchemaTable, OutTable>(recurse, {
+                            new MatcherContext<InTable, OutTable>(recurse, {
                                 path: Stack()
                             })
                     )
@@ -96,7 +63,7 @@ export class SchemaWorld<SchemaTable extends SchemaTableOf<SchemaTable>> {
 }
 
 export function world<
-    SchemaTable extends SchemaTableOf<SchemaTable>
->(): SchemaWorld<SchemaTable> {
-    return new SchemaWorld<SchemaTable>();
+    InTable extends InTableOf<InTable>
+>(): SchemaWorld<InTable> {
+    return new SchemaWorld<InTable>();
 }

@@ -1,31 +1,31 @@
-import { ZodFirstPartySchemaTable } from "./zod-first-party-schema-table";
+import { ZodFirstPartyNodesTable } from "./zod-first-party-nodes-table";
 
 import { SchemaWorld } from "./world";
-import { NodeFromTable, ZodKindedAny } from "./types";
+import { KindedAny, NodeFromTable, ZodKindedAny } from "./types";
 import { ZodFirstPartyTypeKind } from "zod";
 import { SchemaInspector, SchemaNodeInspector } from "./schema-inspector";
 import { MatcherCases, OutTableOf } from "./base-context";
 import { Stack } from "immutable";
 import { MatcherContext } from "./default-context";
 
-const w = new SchemaWorld<ZodFirstPartySchemaTable>();
+const w = new SchemaWorld<ZodFirstPartyNodesTable>();
 
 export const zodMatch = w.match.bind(w);
 export const zodInspect = w.inspect.bind(w);
 
 export const zodMatcher = {
-    cases<OutTable extends OutTableOf<ZodFirstPartySchemaTable>>(
-        cases: MatcherCases<MatcherContext<ZodFirstPartySchemaTable, OutTable>>
+    cases<OutTable extends OutTableOf<ZodFirstPartyNodesTable>>(
+        cases: MatcherCases<MatcherContext<ZodFirstPartyNodesTable, OutTable>>
     ) {
         return w
-            .matcher(MatcherContext.create<ZodFirstPartySchemaTable, OutTable>)
+            .matcher(MatcherContext.create<ZodFirstPartyNodesTable, OutTable>)
             .cases(cases);
     }
 };
 
 export type AnyZodInspector = SchemaNodeInspector<
-    ZodFirstPartySchemaTable,
-    ZodKindedAny
+    ZodFirstPartyNodesTable,
+    KindedAny
 >;
-export type ZodInspector<Kind extends keyof ZodFirstPartySchemaTable> =
-    SchemaInspector<ZodFirstPartySchemaTable, Kind>;
+export type ZodInspector<Kind extends keyof ZodFirstPartyNodesTable> =
+    SchemaInspector<ZodFirstPartyNodesTable, Kind>;
