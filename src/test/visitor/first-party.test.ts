@@ -1,9 +1,9 @@
-import { zodMatch, zodMatcher } from "@lib";
+import { zodMatch, zodTransformer } from "@lib";
 import { z } from "zod";
 import { expectT } from "../helpers/anti-assert";
 
 test("Only ZodString and else", () => {
-    const matcher = zodMatcher.cases<{
+    const matcher = zodTransformer.cases<{
         ZodString: "hello";
         else: false;
     }>({

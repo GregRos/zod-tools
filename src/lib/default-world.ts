@@ -1,31 +1,35 @@
-import { ZodFirstPartyNodesTable } from "./zod-first-party-nodes-table";
+import { ZodFirstPartySchemaTable } from "./zod-first-party-schema-table";
 
-import { SchemaWorld } from "./world";
+import { Domain } from "./world";
 import { KindedAny, NodeFromTable, ZodKindedAny } from "./types";
 import { ZodFirstPartyTypeKind } from "zod";
-import { SchemaInspector, SchemaNodeInspector } from "./schema-inspector";
-import { MatcherCases, OutTableOf } from "./base-context";
+import { SchemaInspector, NodeInspector } from "./schema-inspector";
+import { MatchCases, OutTableOf } from "./base-recursion-context";
 import { Stack } from "immutable";
-import { MatcherContext } from "./default-context";
+import { RecursionContext } from "./default-context";
 
-const w = new SchemaWorld<ZodFirstPartyNodesTable>();
+const w = new Domain<ZodFirstPartySchemaTable>();
 
 export const zodMatch = w.match.bind(w);
 export const zodInspect = w.inspect.bind(w);
 
-export const zodMatcher = {
-    cases<OutTable extends OutTableOf<ZodFirstPartyNodesTable>>(
-        cases: MatcherCases<MatcherContext<ZodFirstPartyNodesTable, OutTable>>
+export const zodTransformer = {
+    cases<OutTable extends OutTableOf<ZodFirstPartySchemaTable>>(
+        cases: MatchCases<RecursionContext<ZodFirstPartySchemaTable, OutTable>>
     ) {
         return w
-            .matcher(MatcherContext.create<ZodFirstPartyNodesTable, OutTable>)
+            .matcher(rec =>
+                RecursionContext<ZodFirstPartySchemaTable, OutTable>({})
+            )
             .cases(cases);
     }
 };
 
-export type AnyZodInspector = SchemaNodeInspector<
-    ZodFirstPartyNodesTable,
+export type AnyZodInspector = NodeInspector<
+    ZodFirstPartySchemaTable,
     KindedAny
 >;
-export type ZodInspector<Kind extends keyof ZodFirstPartyNodesTable> =
-    SchemaInspector<ZodFirstPartyNodesTable, Kind>;
+export type ZodInspector<Kind extends ZodFirstPartyTypeKind> = SchemaInspector<
+    ZodFirstPartySchemaTable,
+    Kind
+>;

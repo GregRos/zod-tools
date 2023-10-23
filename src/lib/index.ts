@@ -3,23 +3,24 @@ export {
     ZodKindOf,
     ZodDefOf,
     ZodKindedTypeDef,
-    InTableOf
+    InTableOf,
+    KindedAny
 } from "./types";
 
-export { SchemaInspector, SchemaNodeInspector } from "./schema-inspector";
+export { SchemaInspector, NodeInspector } from "./schema-inspector";
 export {
     OutTableOf,
-    MatcherCases,
-    BaseContext,
+    MatchCases,
+    BaseRecursionContext,
     getOutputTypeOrDefault,
-    Recurse
-} from "./base-context";
+    RecursiveTransform,
+    RecursionContextDef
+} from "./base-recursion-context";
 export {
     zodMatch,
     zodInspect,
-    zodMatcher,
+    zodTransformer,
     ZodInspector
 } from "./default-world";
-export { SchemaWorld, world } from "./world";
-export { ZodFirstPartyNodesTable } from "./zod-first-party-nodes-table";
-export { BaseContextDef } from "./base-context";
+export { Domain, world } from "./world";
+export { ZodFirstPartySchemaTable } from "./zod-first-party-schema-table";

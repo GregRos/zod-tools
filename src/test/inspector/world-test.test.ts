@@ -1,5 +1,5 @@
 import { z, ZodNumber, ZodString } from "zod";
-import { SchemaWorld } from "@lib";
+import { Domain } from "@lib";
 import {
     SchemaTableWithMagicBox,
     ZodMagicBox,
@@ -7,7 +7,7 @@ import {
 } from "../helpers/magic-box";
 import { expectT } from "../helpers/anti-assert";
 
-const w = new SchemaWorld<SchemaTableWithMagicBox>();
+const w = new Domain<SchemaTableWithMagicBox>();
 
 test("first party ", () => {
     const s = z.string();

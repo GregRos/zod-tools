@@ -1,4 +1,4 @@
-import { ZodInspector, zodMatch, zodMatcher } from "@lib";
+import { ZodInspector, zodMatch, zodTransformer } from "@lib";
 import { z, ZodFirstPartyTypeKind } from "zod";
 import { expectT } from "../helpers/anti-assert";
 import { AnyZodInspector } from "@lib/default-world";

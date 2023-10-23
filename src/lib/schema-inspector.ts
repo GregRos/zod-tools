@@ -9,19 +9,23 @@ import {
 export type SchemaInspector<
     InTable extends InTableOf<InTable>,
     Kind extends keyof InTable
-> = SchemaNodeInspector<InTable, InTable[Kind]>;
+> = NodeInspector<InTable, InTable[Kind]>;
 
 /**
  * Use this to inspect a schema node. You can use the `is` method to check if the
  * node is a specific type while narrowing, and you can use the `kind` property to get the type
  * name.
  */
-export class SchemaNodeInspector<
+export class NodeInspector<
     InTable extends InTableOf<InTable>,
     Node extends KindedAny
 > {
     constructor(readonly _node: Node) {}
 
+    static inspect<InTable extends InTableOf<InTable>>() {
+        return <Node extends KindedAny>(node: Node) =>
+            new NodeInspector<InTable, Node>(node);
+    }
     /**
      * Gets the `kind` AKA `_def.typeName` of the schema node.
      */
@@ -35,7 +39,7 @@ export class SchemaNodeInspector<
      */
     is<const SubKind extends keyof InTable>(
         kind: SubKind
-    ): this is SchemaNodeInspector<InTable, InTable[SubKind]> {
+    ): this is NodeInspector<InTable, InTable[SubKind]> {
         return this._def.typeName === kind;
     }
 

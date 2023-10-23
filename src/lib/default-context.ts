@@ -1,31 +1,18 @@
-import { InTableOf } from "./types";
+import { InTableOf, KindedAny } from "./types";
 import { Stack } from "immutable";
 import {
-    BaseContext,
-    BaseContextDef,
+    BaseRecursionContext,
     OutTableOf,
-    Recurse
-} from "./base-context";
+    RecursiveTransform
+} from "./base-recursion-context";
+import { NodeInspector } from "./schema-inspector";
+import { undefined } from "zod";
 
-export class MatcherContext<
+export class RecursionContext<
     InTable extends InTableOf<InTable>,
     OutTable extends OutTableOf<InTable>
-> extends BaseContext<
+> extends BaseRecursionContext<
     InTable,
     OutTable,
-    MatcherContext<InTable, OutTable>,
-    BaseContextDef<InTable>
-> {
-    protected _with(D: any): MatcherContext<InTable, OutTable> {
-        return new MatcherContext(this._recurse, D);
-    }
-
-    static create<
-        InTable extends InTableOf<InTable>,
-        OutTable extends OutTableOf<InTable>
-    >(recurse: Recurse<InTable, OutTable, MatcherContext<InTable, OutTable>>) {
-        return new MatcherContext(recurse, {
-            path: Stack()
-        });
-    }
-}
+    RecursionContext<InTable, OutTable>
+> {}

@@ -1,42 +1,47 @@
 import { KindedAny, InTableOf, ZodKindedAny, ZodKindOf } from "./types";
-import { SchemaInspector, SchemaNodeInspector } from "./schema-inspector";
+import { SchemaInspector, NodeInspector } from "./schema-inspector";
 import {
     getOutputTypeOrDefault,
-    MatcherCases,
-    BaseContext,
+    MatchCases,
+    BaseRecursionContext,
     OutTableOf,
-    Recurse
-} from "./base-context";
+    RecursiveTransform
+} from "./base-recursion-context";
 import { Stack } from "immutable";
-import { MatcherContext } from "./default-context";
+import { RecursionContext } from "./default-context";
 
 /**
  * Use this if you have custom schema nodes. You need to explicitly specify the
  * `SchemaTable` so the world knows which schemas are included. Then you can create
  * matchers and inspectors that work with your custom schemas.
  */
-export class SchemaWorld<InTable extends InTableOf<InTable>> {
+export class Domain<InTable extends InTableOf<InTable>> {
     /**
      * Create a schema inspector for a given schema node.
      * @param node The schema node to inspect.
      */
-    inspect<Z extends KindedAny>(node: Z): SchemaNodeInspector<InTable, Z> {
-        return new SchemaNodeInspector(node as any);
+    inspect<Z extends KindedAny>(node: Z): NodeInspector<InTable, Z> {
+        return new NodeInspector(node as any);
     }
 
-    matcher<Ctx extends BaseContext<InTable, any, any>>(
-        createEmpty: (recurse: Recurse<InTable, any, any>) => Ctx
+    matcher<Ctx extends BaseRecursionContext<InTable, any, any>>(
+        contextCtor: (recurse: RecursiveTransform<InTable, any, Ctx>) => Ctx
     ) {
         return {
-            cases(cases: MatcherCases<Ctx>): Ctx {
-                const recurse: Recurse<InTable, Ctx["__OutTable__"], Ctx> =
-                    function (this: Ctx, node) {
-                        if (node.kind in cases) {
-                            return (cases as any)[node.kind].call(this, node);
-                        }
-                        return cases.else.call(this, node);
-                    };
-                const context = createEmpty(recurse);
+            cases(cases: MatchCases<Ctx>): Ctx {
+                const recurse: RecursiveTransform<
+                    InTable,
+                    Ctx["__OutTable__"],
+                    Ctx
+                > = function (this: Ctx, node) {
+                    if (node.kind in cases) {
+                        return (cases as any)[node.kind].call(this, node);
+                    }
+                    return cases.else.call(this, node);
+                };
+                const context = new contextCtor({
+                    recurse
+                });
                 return context;
             }
         };
@@ -46,15 +51,10 @@ export class SchemaWorld<InTable extends InTableOf<InTable>> {
         const world = this;
         return {
             cases<OutTable extends OutTableOf<InTable>>(
-                cases: MatcherCases<MatcherContext<InTable, OutTable>>
+                cases: MatchCases<RecursionContext<InTable, OutTable>>
             ) {
                 return world
-                    .matcher(
-                        recurse =>
-                            new MatcherContext<InTable, OutTable>(recurse, {
-                                path: Stack()
-                            })
-                    )
+                    .matcher(RecursionContext<InTable, OutTable>)
                     .cases(cases)
                     .recurse(target);
             }
@@ -62,8 +62,6 @@ export class SchemaWorld<InTable extends InTableOf<InTable>> {
     }
 }
 
-export function world<
-    InTable extends InTableOf<InTable>
->(): SchemaWorld<InTable> {
-    return new SchemaWorld<InTable>();
+export function world<InTable extends InTableOf<InTable>>(): Domain<InTable> {
+    return new Domain<InTable>();
 }

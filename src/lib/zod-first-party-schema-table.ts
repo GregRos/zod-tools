@@ -48,7 +48,7 @@ import { KindedAny, InTableOf, ZodKindedAny } from "./types";
  *
  * You will never need to make instances of this class.
  */
-export abstract class ZodFirstPartyNodesTable {
+export abstract class ZodFirstPartySchemaTable {
     [ZodFirstPartyTypeKind.ZodEffects]!: ZodEffects<ZodKindedAny>;
     [ZodFirstPartyTypeKind.ZodPipeline]!: ZodPipeline<
         ZodKindedAny,

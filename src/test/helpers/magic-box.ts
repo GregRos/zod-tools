@@ -1,5 +1,5 @@
 import { ParseInput, ParseReturnType, ZodType, ZodTypeDef } from "zod";
-import { ZodFirstPartyNodesTable } from "@lib";
+import { ZodFirstPartySchemaTable } from "@lib";
 
 export interface ZodMagicBoxDef extends ZodTypeDef {
     typeName: "magicBox";
@@ -12,6 +12,6 @@ export class ZodMagicBox extends ZodType<any, ZodTypeDef & ZodMagicBoxDef> {
     }
 }
 
-export class SchemaTableWithMagicBox extends ZodFirstPartyNodesTable {
+export class SchemaTableWithMagicBox extends ZodFirstPartySchemaTable {
     magicBox!: ZodMagicBox;
 }

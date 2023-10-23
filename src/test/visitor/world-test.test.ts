@@ -1,5 +1,5 @@
 import { SchemaTableWithMagicBox } from "../helpers/magic-box";
-import { SchemaWorld, world } from "@lib";
+import { Domain, world } from "@lib";
 import { z, ZodFirstPartyTypeKind, ZodOptionalDef, ZodStringDef } from "zod";
 import { expectT } from "../helpers/anti-assert";
 
